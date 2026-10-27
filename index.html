@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมภารกิจพิชิตปัญหา (เวอร์ชันง่าย + มีตัวอย่าง)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #a5f3fc 0%, #c084fc 100%);
+            user-select: none;
+        }
+        .font-heading {
+            font-family: 'Mitr', sans-serif;
+        }
+        @keyframes bounce-gentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-bounce-gentle {
+            animation: bounce-gentle 2s infinite ease-in-out;
+        }
+        .btn-option {
+            transition: all 0.2s ease;
+        }
+        .btn-option:hover {
+            transform: translateY(-3px) scale(1.01);
+        }
+        .btn-option:active {
+            transform: translateY(1px);
+        }
+        .glow-effect {
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-3 md:p-6">
+
+    <!-- Container หลัก -->
+    <div id="game-container" class="w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-amber-300 overflow-hidden flex flex-col min-h-[600px] relative">
+
+        <!-- Header / Status Bar -->
+        <header id="status-bar" class="bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500 p-3.5 px-6 flex justify-between items-center shadow-md hidden">
+            <div class="flex items-center space-x-2">
+                <span id="level-badge-container" class="bg-white/90 text-amber-900 font-heading font-bold px-3.5 py-1 rounded-full text-sm md:text-base shadow-sm">
+                    ⭐ <span id="level-text-label">ด่านที่</span> <span id="current-level-display">1</span> / 5
+                </span>
+            </div>
+            <div class="bg-white/90 text-slate-800 font-heading font-bold px-4 py-1 rounded-full text-sm md:text-base shadow-sm flex items-center space-x-1">
+                <span>🏆 คะแนน:</span>
+                <span id="score-display" class="text-amber-600 text-lg">0</span>
+            </div>
+        </header>
+
+        <!-- Main Area -->
+        <main class="flex-1 flex flex-col justify-between p-4 md:p-6 relative">
+
+            <!-- SCREEN 1: หน้าแรก (Start Screen) -->
+            <div id="start-screen" class="flex-1 flex flex-col justify-center items-center text-center py-2">
+                <div class="text-7xl md:text-8xl mb-2 animate-bounce-gentle">🧩</div>
+                <h1 class="text-3xl md:text-4xl font-bold font-heading text-indigo-700 mb-2">
+                    เกมภารกิจพิชิตปัญหา
+                </h1>
+                <p class="text-slate-600 text-sm md:text-base max-w-md mb-4 leading-relaxed">
+                    เรียนรู้ <span class="text-amber-600 font-bold">5 ขั้นตอนการแก้ปัญหา</span> อย่างง่ายและสนุก!
+                </p>
+
+                <!-- การ์ดขั้นตอนการแก้ปัญหา -->
+                <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-3.5 w-full max-w-md mb-5 text-left shadow-inner">
+                    <p class="font-heading font-bold text-indigo-900 text-xs md:text-sm mb-1.5 text-center">💡 5 ขั้นตอนง่ายๆ ในการแก้ปัญหา:</p>
+                    <div class="grid grid-cols-1 gap-1 text-xs md:text-sm text-indigo-950">
+                        <div class="bg-white p-1.5 rounded-lg border border-indigo-100 flex items-center">1️⃣ <b>เข้าใจปัญหา</b> &nbsp;- เกิดอะไรขึ้น?</div>
+                        <div class="bg-white p-1.5 rounded-lg border border-indigo-100 flex items-center">2️⃣ <b>วิเคราะห์ข้อมูล</b> &nbsp;- ต้องใช้อะไรบ้าง?</div>
+                        <div class="bg-white p-1.5 rounded-lg border border-indigo-100 flex items-center">3️⃣ <b>วางแผน</b> &nbsp;- คิดวิธีแก้ไว้ล่วงหน้า</div>
+                        <div class="bg-white p-1.5 rounded-lg border border-indigo-100 flex items-center">4️⃣ <b>ลงมือทำ</b> &nbsp;- ทำตามแผนที่วางไว้</div>
+                        <div class="bg-white p-1.5 rounded-lg border border-indigo-100 flex items-center">5️⃣ <b>ตรวจสอบ</b> &nbsp;- ดูผลลัพธ์ว่าสำเร็จไหม</div>
+                    </div>
+                </div>
+
+                <!-- ปุ่มเริ่มทดลองเล่นก่อน -->
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full max-w-md">
+                    <button onclick="startTutorial()" class="flex-1 font-heading bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-bold text-base md:text-lg py-3 rounded-2xl shadow-lg transition-transform active:scale-95 flex items-center justify-center space-x-1 border-2 border-amber-200">
+                        <span>🎓 ลองฝึกทำตัวอย่างก่อน</span>
+                    </button>
+                    <button onclick="startGame()" class="flex-1 font-heading bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-base md:text-lg py-3 rounded-2xl shadow-lg transition-transform active:scale-95 flex items-center justify-center space-x-1">
+                        <span>🚀 เริ่มเล่นเลย!</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SCREEN 2: หน้าเล่นเกม (Gameplay & Tutorial Screen) -->
+            <div id="gameplay-screen" class="flex-1 flex flex-col justify-between hidden">
+                
+                <!-- หัวข้อขั้นตอน + การ์ดคำถาม -->
+                <div>
+                    <!-- Banner แสดงเมื่ออยู่ในโหมดทดลองเล่น -->
+                    <div id="tutorial-banner" class="bg-amber-400 text-amber-950 font-heading text-xs md:text-sm font-bold py-1 px-3 rounded-full text-center mb-2 shadow-sm animate-pulse hidden">
+                        🔰 โหมดฝึกทดลองเล่น (ลองตอบได้เลย ไม่คิดคะแนนจริง)
+                    </div>
+
+                    <div class="text-center mb-1">
+                        <span id="step-badge" class="bg-indigo-100 text-indigo-700 font-heading text-xs md:text-sm px-3.5 py-1 rounded-full border border-indigo-300 font-bold inline-block">
+                            ขั้นตอนที่ 1: ทำความเข้าใจปัญหา
+                        </span>
+                    </div>
+
+                    <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3.5 shadow-sm text-center my-2">
+                        <div class="text-3xl mb-1" id="question-icon">⏰</div>
+                        <h2 id="question-text" class="font-heading text-base md:text-lg text-slate-800 font-bold mb-0.5">
+                            โจทย์คำถาม...
+                        </h2>
+                        <p id="situation-text" class="text-slate-600 text-xs md:text-sm bg-white/80 py-1 px-3 rounded-lg border border-amber-200 inline-block">
+                            สถานการณ์...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ตัวละครให้กำลังใจ + คำใบ้ตัวอย่าง -->
+                <div class="flex justify-center items-center space-x-3 my-1">
+                    <div class="text-4xl md:text-5xl animate-bounce-gentle">🎒</div>
+                    <div id="helper-box" class="bg-white border-2 border-slate-200 rounded-2xl px-3 py-1.5 shadow-sm text-xs md:text-sm text-slate-700 max-w-sm">
+                        💬 เลือกคำตอบที่ถูกต้องที่สุดได้เลย!
+                    </div>
+                </div>
+
+                <!-- ปุ่มเลือกคำตอบ 3 ปุ่ม (ก, ข, ค) -->
+                <div class="space-y-2 my-1">
+                    <button id="btn-A" onclick="checkAnswer('ก')" class="btn-option w-full bg-indigo-500 hover:bg-indigo-600 text-white p-2.5 md:p-3 rounded-xl font-medium text-left flex items-center space-x-3 shadow-md">
+                        <span class="bg-amber-300 text-indigo-950 font-heading font-bold w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0">ก</span>
+                        <span id="opt-A-text" class="text-xs md:text-sm">ตัวเลือก ก</span>
+                    </button>
+
+                    <button id="btn-B" onclick="checkAnswer('ข')" class="btn-option w-full bg-indigo-500 hover:bg-indigo-600 text-white p-2.5 md:p-3 rounded-xl font-medium text-left flex items-center space-x-3 shadow-md">
+                        <span class="bg-amber-300 text-indigo-950 font-heading font-bold w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0">ข</span>
+                        <span id="opt-B-text" class="text-xs md:text-sm">ตัวเลือก ข</span>
+                    </button>
+
+                    <button id="btn-C" onclick="checkAnswer('ค')" class="btn-option w-full bg-indigo-500 hover:bg-indigo-600 text-white p-2.5 md:p-3 rounded-xl font-medium text-left flex items-center space-x-3 shadow-md">
+                        <span class="bg-amber-300 text-indigo-950 font-heading font-bold w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0">ค</span>
+                        <span id="opt-C-text" class="text-xs md:text-sm">ตัวเลือก ค</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- SCREEN 3: หน้าจบเกม (End Screen) -->
+            <div id="end-screen" class="flex-1 flex flex-col justify-center items-center text-center py-4 hidden">
+                <div id="end-icon" class="text-7xl mb-2 animate-bounce-gentle">🌟</div>
+                <h2 class="text-2xl md:text-3xl font-heading font-bold text-indigo-800 mb-1">
+                    ภารกิจสำเร็จแล้ว!
+                </h2>
+                <p class="text-slate-500 text-xs md:text-sm mb-4">ยินดีด้วย คุณแก้ปัญหาได้อย่างเป็นขั้นตอน!</p>
+
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 max-w-sm w-full mb-5 shadow-md">
+                    <p class="text-slate-500 text-xs mb-1">คะแนนที่คุณได้</p>
+                    <div class="text-4xl font-heading font-bold text-amber-500 mb-2">
+                        <span id="final-score">5</span> / 5
+                    </div>
+                    <p id="final-msg" class="text-slate-700 font-medium text-xs md:text-sm">
+                        ยอดเยี่ยม คุณเข้าใจขั้นตอนแก้ปัญหาดีมาก!
+                    </p>
+                </div>
+
+                <div class="flex space-x-3 w-full max-w-sm">
+                    <button onclick="startGame()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-heading font-bold py-3 rounded-xl shadow-md transition-transform active:scale-95 text-xs md:text-sm">
+                        🔄 เล่นอีกครั้ง
+                    </button>
+                    <button onclick="resetToHome()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-heading font-bold py-3 rounded-xl transition-all text-xs md:text-sm">
+                        🏠 หน้าแรก
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Pop-up แจ้งตอบถูก / ผิด -->
+    <div id="feedback-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-3xl border-4 border-amber-300 p-5 max-w-xs w-full text-center shadow-2xl">
+            <div id="modal-icon" class="text-6xl mb-2">✅</div>
+            <h3 id="modal-title" class="text-xl font-heading font-bold text-emerald-600 mb-1">ตอบถูก เก่งมาก!</h3>
+            <p id="modal-msg" class="text-slate-600 text-xs md:text-sm mb-4">คำอธิบาย...</p>
+            <button id="modal-btn" onclick="nextQuestionOrFinish()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-heading font-bold py-2.5 px-4 rounded-xl shadow-md">
+                ไปต่อกันเลย ➔
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ข้อมูลตัวอย่างทดลองเล่น (Tutorial Question)
+        const tutorialData = {
+            icon: "🥛",
+            badge: "🔰 ตัวอย่าง: ทดลองแก้ปัญหา",
+            situation: "สถานการณ์ตัวอย่าง: หิวนมแต่กล่องนมยังไม่ได้เปิด",
+            question: "ขั้นตอนแรกที่ควรทำคืออะไร?",
+            options: {
+                "ก": "หาสาเหตุว่าทำไมถึงยังไม่ได้ดื่ม (เพราะกล่องนมยังไม่เปิด)",
+                "ข": "โยนกล่องนมทิ้งทันที",
+                "ค": "เข้านอนโดยไม่สนใจ"
+            },
+            correct: "ก",
+            hint: "ถูกต้อง! ขั้นแรกเราต้องเข้าใจก่อนว่าปัญหาคือ 'กล่องนมยังไม่เปิด' จ้ะ",
+            helper: "💡 นี่คือตัวอย่างทดลองเล่น! ลองเลือกข้อ ก. ดูนะจ๊ะ"
+        };
+
+        // โครงสร้างคำถามจริง 5 ด่าน
+        const questionsData = [
+            {
+                level: 1,
+                icon: "⏰",
+                badge: "ขั้นตอนที่ 1: ทำความเข้าใจปัญหา",
+                situation: "สถานการณ์: ตื่นสายและต้องไปโรงเรียนให้ทันเวลา",
+                question: "ขั้นตอนแรกของการแก้ปัญหาคืออะไร?",
+                options: {
+                    "ก": "ตรวจสอบว่าปัญหาคืออะไร (เช่น ตื่นสาย)",
+                    "ข": "วิ่งออกจากบ้านทันทีโดยไม่ดูอะไรเลย",
+                    "ค": "นั่งเล่นเกมก่อนค่อยไปโรงเรียน"
+                },
+                correct: "ก",
+                hint: "ต้องรู้ก่อนนะว่าตอนนี้เรากำลังเจอปัญหาอะไร!",
+                helper: "💬 ขั้นแรก ต้องมองหาว่าปัญหาคืออะไรนะ!"
+            },
+            {
+                level: 2,
+                icon: "🗺️",
+                badge: "ขั้นตอนที่ 2: วิเคราะห์ข้อมูล",
+                situation: "สถานการณ์: ต้องเดินทางไปโรงเรียนให้ทัน",
+                question: "เราควรพิจารณาข้อมูลใดบ้าง?",
+                options: {
+                    "ก": "ระยะทาง เวลา และวิธีเดินทาง",
+                    "ข": "สีของกระเป๋านักเรียน",
+                    "ค": "การ์ตูนเรื่องที่ชอบดู"
+                },
+                correct: "ก",
+                hint: "ข้อมูลเรื่องระยะทางและเวลาจะช่วยให้เราเดินทางได้เร็วขึ้นนะ!",
+                helper: "💬 สิ่งไหนจำเป็นต่อการเดินทาง ให้เลือกสิ่งนั้นนะ!"
+            },
+            {
+                level: 3,
+                icon: "📝",
+                badge: "ขั้นตอนที่ 3: วางแผนแก้ปัญหา",
+                situation: "สถานการณ์: อยากไปโรงเรียนทันเวลา",
+                question: "เราควรวางแผนอย่างไรดี?",
+                options: {
+                    "ก": "เตรียมกระเป๋าและจัดเวลาออกจากบ้าน",
+                    "ข": "รอให้ถึงเวลาก่อนค่อยเตรียมตัว",
+                    "ค": "ไม่ต้องวางแผน ออกเดินทางเลย"
+                },
+                correct: "ก",
+                hint: "การจัดเวลาล่วงหน้าคือการวางแผนที่ดีจ้ะ!",
+                helper: "💬 คิดเตรียมไว้ล่วงหน้า จะช่วยให้ไม่ลนลานนะ!"
+            },
+            {
+                level: 4,
+                icon: "🏃‍♂️",
+                badge: "ขั้นตอนที่ 4: ลงมือแก้ปัญหา",
+                situation: "สถานการณ์: เราวางแผนการเดินทางเสร็จแล้ว",
+                question: "ขั้นตอนต่อไปต้องทำอย่างไร?",
+                options: {
+                    "ก": "ลงมือปฏิบัติตามแผนที่วางไว้",
+                    "ข": "เปลี่ยนแผนไปเรื่อยๆ โดยไม่มีเหตุผล",
+                    "ค": "นั่งเฉยๆ ไม่ทำอะไรเลย"
+                },
+                correct: "ก",
+                hint: "เมื่อมีแผนแล้ว ต้องตั้งใจลงมือทำตามแผนนะ!",
+                helper: "💬 ทำตามแผนที่คิดไว้ได้เลย!"
+            },
+            {
+                level: 5,
+                icon: "🎯",
+                badge: "ขั้นตอนที่ 5: ตรวจสอบผลลัพธ์",
+                situation: "สถานการณ์: เดินทางมาถึงโรงเรียนแล้ว",
+                question: "เราควรตรวจสอบอะไรเป็นอย่างแรก?",
+                options: {
+                    "ก": "มาถึงโรงเรียนทันเวลาหรือไม่",
+                    "ข": "สังเกตสีรองเท้าของเพื่อน",
+                    "ค": "นับจำนวนต้นไม้ในโรงเรียน"
+                },
+                correct: "ก",
+                hint: "ต้องดูว่าเราทำสำเร็จตามเป้าหมาย (ทันเวลา) หรือไม่!",
+                helper: "💬 เช็กดูซิว่าผลลัพธ์สำเร็จตามต้องการไหม!"
+            }
+        ];
+
+        let isTutorialMode = false;
+        let score = 0;
+        let currentLevel = 1;
+        const totalQuestions = 5;
+        let correctAnswer = "";
+        let isAnswered = false;
+
+        // Sound Effects Web Audio API Simple
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } else if (type === 'wrong') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(130, audioCtx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } else if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            }
+        }
+
+        // เริ่มโหมดตัวอย่างทดลองเล่น (Tutorial)
+        function startTutorial() {
+            playSound('click');
+            isTutorialMode = true;
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('status-bar').classList.remove('hidden');
+            document.getElementById('gameplay-screen').classList.remove('hidden');
+            document.getElementById('tutorial-banner').classList.remove('hidden');
+
+            document.getElementById('level-text-label').textContent = "โหมดตัวอย่าง";
+            document.getElementById('current-level-display').textContent = "⭐";
+            document.getElementById('score-display').textContent = "0";
+
+            loadTutorialData();
+        }
+
+        function loadTutorialData() {
+            isAnswered = false;
+            correctAnswer = tutorialData.correct;
+            document.getElementById('step-badge').textContent = tutorialData.badge;
+            document.getElementById('question-icon').textContent = tutorialData.icon;
+            document.getElementById('question-text').textContent = tutorialData.question;
+            document.getElementById('situation-text').textContent = tutorialData.situation;
+            document.getElementById('helper-box').textContent = tutorialData.helper;
+
+            document.getElementById('opt-A-text').textContent = tutorialData.options["ก"];
+            document.getElementById('opt-B-text').textContent = tutorialData.options["ข"];
+            document.getElementById('opt-C-text').textContent = tutorialData.options["ค"];
+        }
+
+        // เริ่มเล่นเกมจริง 5 ด่าน
+        function startGame() {
+            playSound('click');
+            isTutorialMode = false;
+            score = 0;
+            currentLevel = 1;
+            
+            document.getElementById('tutorial-banner').classList.add('hidden');
+            document.getElementById('level-text-label').textContent = "ด่านที่";
+            document.getElementById('score-display').textContent = score;
+            document.getElementById('current-level-display').textContent = currentLevel;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('status-bar').classList.remove('hidden');
+            document.getElementById('gameplay-screen').classList.remove('hidden');
+
+            loadQuestion(currentLevel);
+        }
+
+        function loadQuestion(level) {
+            isAnswered = false;
+            const q = questionsData[level - 1];
+
+            correctAnswer = q.correct;
+            document.getElementById('current-level-display').textContent = level;
+            document.getElementById('step-badge').textContent = q.badge;
+            document.getElementById('question-icon').textContent = q.icon;
+            document.getElementById('question-text').textContent = q.question;
+            document.getElementById('situation-text').textContent = q.situation;
+            document.getElementById('helper-box').textContent = q.helper;
+
+            document.getElementById('opt-A-text').textContent = q.options["ก"];
+            document.getElementById('opt-B-text').textContent = q.options["ข"];
+            document.getElementById('opt-C-text').textContent = q.options["ค"];
+        }
+
+        function checkAnswer(selected) {
+            if (isAnswered) return;
+
+            const modal = document.getElementById('feedback-modal');
+            const icon = document.getElementById('modal-icon');
+            const title = document.getElementById('modal-title');
+            const msg = document.getElementById('modal-msg');
+            const btn = document.getElementById('modal-btn');
+
+            const currentObj = isTutorialMode ? tutorialData : questionsData[currentLevel - 1];
+
+            if (selected === correctAnswer) {
+                isAnswered = true;
+                if (!isTutorialMode) {
+                    score += 1;
+                    document.getElementById('score-display').textContent = score;
+                }
+                playSound('correct');
+
+                icon.textContent = "🎉";
+                title.textContent = isTutorialMode ? "เก่งมาก! นี่คือการตอบที่ถูกต้อง" : "ตอบถูกต้อง! เก่งมาก";
+                title.className = "text-xl font-heading font-bold text-emerald-600 mb-1";
+                msg.textContent = currentObj.hint;
+
+                if (isTutorialMode) {
+                    btn.textContent = "พร้อมแล้ว! เริ่มเกมจริงกันเลย 🚀";
+                    btn.className = "w-full bg-emerald-500 hover:bg-emerald-600 text-white font-heading font-bold py-2.5 px-4 rounded-xl shadow-md";
+                } else {
+                    btn.textContent = currentLevel < totalQuestions ? "ไปด่านต่อไป ➔" : "ดูผลคะแนน 🏆";
+                    btn.className = "w-full bg-emerald-500 hover:bg-emerald-600 text-white font-heading font-bold py-2.5 px-4 rounded-xl shadow-md";
+                }
+            } else {
+                playSound('wrong');
+
+                icon.textContent = "❌";
+                title.textContent = "ยังไม่ถูกต้องนะ";
+                title.className = "text-xl font-heading font-bold text-rose-500 mb-1";
+                msg.textContent = isTutorialMode ? "ลองเลือกข้อ ก. ดูนะจ๊ะ ข้อนี้เป็นตัวอย่างจ้ะ" : "ลองคิดดูใหม่อีกครั้งนะจ๊ะ!";
+                btn.textContent = "ลองตอบอีกที 🔄";
+                btn.className = "w-full bg-rose-500 hover:bg-rose-600 text-white font-heading font-bold py-2.5 px-4 rounded-xl shadow-md";
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function nextQuestionOrFinish() {
+            playSound('click');
+            document.getElementById('feedback-modal').classList.add('hidden');
+
+            if (isAnswered) {
+                if (isTutorialMode) {
+                    // เมื่อจบตัวอย่าง ให้เริ่มเกมจริงทันที
+                    startGame();
+                } else {
+                    currentLevel++;
+                    if (currentLevel > totalQuestions) {
+                        endGame();
+                    } else {
+                        loadQuestion(currentLevel);
+                    }
+                }
+            }
+        }
+
+        function endGame() {
+            document.getElementById('status-bar').classList.add('hidden');
+            document.getElementById('gameplay-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+
+            document.getElementById('final-score').textContent = score;
+            const endIcon = document.getElementById('end-icon');
+            const finalMsg = document.getElementById('final-msg');
+
+            if (score === 5) {
+                endIcon.textContent = "🌟";
+                finalMsg.textContent = "ยอดเยี่ยมมาก! คุณแก้ปัญหาได้อย่างเป็นขั้นตอนครบถ้วน 100%";
+            } else if (score >= 3) {
+                endIcon.textContent = "👏";
+                finalMsg.textContent = "เก่งมาก! คุณทำได้ดีแล้ว ลองทบทวนข้อที่พลาดไปนะ";
+            } else {
+                endIcon.textContent = "💡";
+                finalMsg.textContent = "พยายามอีกนิดนะ! ลองกลับไปฝึกทบทวนขั้นตอนใหม่อีกครั้ง";
+            }
+        }
+
+        function resetToHome() {
+            playSound('click');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('status-bar').classList.add('hidden');
+            document.getElementById('gameplay-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
